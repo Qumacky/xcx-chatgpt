@@ -1626,19 +1626,11 @@ var ExtensionBlocks = /*#__PURE__*/function () {
       formatMessage = runtime.formatMessage;
     }
   }
-  _createClass(ExtensionBlocks, [{
-    key: "doIt",
-    value: function doIt(args) {
-      var func = new Function("return (".concat(cast.toString(args.SCRIPT), ")"));
-      var result = func.call(this);
-      console.log(result);
-      return result;
-    }
 
-    /**
-     * @returns {object} metadata for this extension and its blocks.
-     */
-  }, {
+  /**
+   * @returns {object} metadata for this extension and its blocks.
+   */
+  _createClass(ExtensionBlocks, [{
     key: "getInfo",
     value: function getInfo() {
       setupTranslations();
@@ -1675,7 +1667,7 @@ var ExtensionBlocks = /*#__PURE__*/function () {
     key: "sendMessage",
     value: function () {
       var _sendMessage = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(args) {
-        var username, message, body, url, req, res, data;
+        var username, message, body, url, myHeaders, req, res, data;
         return regenerator.wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -1687,44 +1679,48 @@ var ExtensionBlocks = /*#__PURE__*/function () {
                 username: "".concat(username),
                 message: "".concat(message)
               };
-              url = new URL('https://bert.watson.jp/chatGPT/'); // url.pathname = 'chatGPT';
+              url = new URL('https://bert.watson.jp/chatGPT/'); // const url = new URL('http:localhost:5001');
               log.log(body);
+              myHeaders = new Headers();
+              myHeaders.append('Content-Type', 'application/json');
+              // myHeaders.append('Authorization', 'Bearer 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');
               req = new Request(url, {
                 method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
+                // headers: {'Content-Type': 'application/json'},
+                headers: myHeaders,
                 body: JSON.stringify(body),
                 mode: 'cors'
               });
-              _context.prev = 8;
-              _context.next = 11;
+              _context.prev = 10;
+              _context.next = 13;
               return fetch(req);
-            case 11:
+            case 13:
               res = _context.sent;
               if (!res.ok) {
-                _context.next = 19;
+                _context.next = 22;
                 break;
               }
-              _context.next = 15;
+              _context.next = 17;
               return res.json();
-            case 15:
+            case 17:
               data = _context.sent;
-              return _context.abrupt("return", JSON.stringify(data));
-            case 19:
-              return _context.abrupt("return", "".concat(res.status, ": ").concat(res.statusText, ", URL: ").concat(req.url));
-            case 20:
-              _context.next = 25;
-              break;
+              log.log(data.result);
+              //return JSON.stringify(data.result);
+              return _context.abrupt("return", data.result);
             case 22:
-              _context.prev = 22;
-              _context.t0 = _context["catch"](8);
-              return _context.abrupt("return", "".concat(_context.t0, ", URL: ").concat(req.url));
+              return _context.abrupt("return", "".concat(res.status, ": ").concat(res.statusText, ", URL: ").concat(req.url));
+            case 23:
+              _context.next = 28;
+              break;
             case 25:
+              _context.prev = 25;
+              _context.t0 = _context["catch"](10);
+              return _context.abrupt("return", "".concat(_context.t0, ", URL: ").concat(req.url));
+            case 28:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[8, 22]]);
+        }, _callee, null, [[10, 25]]);
       }));
       function sendMessage(_x) {
         return _sendMessage.apply(this, arguments);
